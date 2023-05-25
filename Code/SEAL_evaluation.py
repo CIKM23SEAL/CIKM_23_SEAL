@@ -375,8 +375,8 @@ if __name__ == "__main__":
         wandb = None
     else:
     
-        wandb.init(project="Journal_exp",
-            entity='tim310579',
+        wandb.init(project="CIKM23",
+            entity='entity',
             name = 'SEAL' + use_dataset_name,
             
             reinit=True)

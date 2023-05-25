@@ -186,13 +186,13 @@ if __name__ == "__main__":
     embedding_H_t = data_setting.return_embedding_H_t(use_dataset_name, embedding_method)
     
     
-    w_and_b = 1
+    w_and_b = 0
     
     if w_and_b == 0:
         wandb = None
     else:
-        wandb.init(project="Journal_exp",
-            entity='tim310579',
+        wandb.init(project="CIKM23",
+            entity='entity',
             name = 'SEAL' + use_dataset_name,
             
             reinit=True)
