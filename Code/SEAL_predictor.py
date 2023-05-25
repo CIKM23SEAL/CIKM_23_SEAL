@@ -110,7 +110,7 @@ def execute(label_num, config, training_data, training_label, testing_data, test
         np.random.shuffle(s)
 
         training_data = training_data[s]
-        if resample is not None: training_data_2 = training_data_2[s]
+        
         training_label = training_label[s]
         
         for idx in tqdm(range(len_t)):
@@ -121,10 +121,10 @@ def execute(label_num, config, training_data, training_label, testing_data, test
 
             
             ##########
-            predictions, t = model(X, embedding_H_t=embedding_H_t, src_key_padding_mask=None)
+            predictions, t = model(X, embedding_H_t=embedding_H_t)
 
             loss, c, r, b, p = model.applyLoss( # v
-                predictions, input_label, beta=config.beta, loss_weight=None, n_js=n_js )
+                predictions, input_label, beta=config.beta, loss_weight=None, n_js=None )
 
             optimizer.zero_grad()
             
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     # CNN, Informer, TCNcatCNN
     IDL_type = 'Informer' #'Informer'
     # Transformer, GRU, LSTM
-    backbone = 'Transformer'
+    backbone = 'LSTM'
     # GCN, GAT, GIN, Linear
     gnn_type = 'GAT'
 
@@ -202,7 +202,6 @@ if __name__ == "__main__":
                 'embedding_method': embedding_method,
                 'IDL_type': IDL_type,
                 'BaseRNN': backbone,
-                'Imbalance': imb,
                 'GNN_Type': gnn_type,
                 'CNN_attn': cnn_attn,
                 'Window_size': window_size

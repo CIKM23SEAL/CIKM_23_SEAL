@@ -9,7 +9,7 @@ from torch import Tensor
 
 from core.layers import BaseCNN, BaseRNN, Controller_concat
 from core.layers import BaselineNetwork
-from core.layers import BaseTCN, Discriminator_GAT, Discriminator_linear, Discriminator_GCN
+from core.layers import BaseTCN, Discriminator_GAT, Discriminator_linear
 from core.layers import GAT
 from core.informer import Informer
 
@@ -17,7 +17,7 @@ from scipy import signal
 
 #, my_transformer #FixedPositionalEncoding, LearnablePositionalEncoding, TransformerBatchNormEncoderLayer, get_pos_encoder, _get_activation_fn #TransformerEncoderLayer, TransformerEncoder
 
-from core.loss import FocalLoss, focal_loss
+from core.loss import FocalLoss
 from torchsummary import summary
 
 import collections

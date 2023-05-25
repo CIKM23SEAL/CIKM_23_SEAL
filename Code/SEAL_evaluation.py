@@ -355,7 +355,7 @@ if __name__ == "__main__":
     # CNN, Informer, TCNcatCNN
     IDL_type = 'Informer' #'Informer'
     # Transformer, GRU, LSTM
-    backbone = 'Transformer'
+    backbone = 'LSTM'
     # GCN, GAT, GIN, Linear
     gnn_type = 'GAT'
 

@@ -8,7 +8,7 @@ from torch import Tensor
 from torch.distributions import Bernoulli
 from einops import rearrange, reduce, repeat
 from einops.layers.torch import Rearrange, Reduce
-from core.my_CDL import my_CDL as My_CDL
+
 
 import math
 
@@ -267,8 +267,6 @@ class BaseRNN(nn.Module):
             self.rnn = getattr(nn, CELL_TYPE)(N_FEATURES,
                                               HIDDEN_DIM,
                                               N_LAYERS)
-        elif CELL_TYPE == 'Transformer':
-            self.rnn = My_CDL() #TransformerModel()
         else:
             if CELL_TYPE == 'TCN':
                 self.rnn = BaseTCN(1, HIDDEN_DIM, num_channels, 3, 0.25)
