@@ -466,7 +466,7 @@ if __name__ == "__main__":
                        
             if w_and_b == 1: wandb.log({'model_path': str(model_path).split('/')[-2]})
             
-            if seed == 10: wandb.log({'tip': 'SEAL_10fold_evaluation'})
+            if seed == 10 and w_and_b == 1: wandb.log({'tip': 'SEAL_10fold_evaluation'})
                          
             uio.check_folder(model_path)
     
