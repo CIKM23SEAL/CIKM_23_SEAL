@@ -226,37 +226,6 @@ class TokenEmbedding(nn.Module):
         x = self.tokenConv(x.permute(0, 2, 1)).transpose(1,2)
         return x
 
-class FixedEmbedding(nn.Module):
-    def __init__(self, c_in, d_model):
-        super(FixedEmbedding, self).__init__()
-
-        w = torch.zeros(c_in, d_model).float()
-        w.require_grad = False
-
-        position = torch.arange(0, c_in).float().unsqueeze(1)
-        div_term = (torch.arange(0, d_model, 2).float() * -(math.log(10000.0) / d_model)).exp()
-
-        w[:, 0::2] = torch.sin(position * div_term)
-        w[:, 1::2] = torch.cos(position * div_term)
-
-        self.emb = nn.Embedding(c_in, d_model)
-        self.emb.weight = nn.Parameter(w, requires_grad=False)
-
-    def forward(self, x):
-        return self.emb(x).detach()
-
-
-
-class TemporalEmbedding(nn.Module):
-    def __init__(self, in_channel, d_model, embed_type='fixed', freq='h'): # input_dim, output_dim, embedding_dim
-        super(TemporalEmbedding, self).__init__()        
-        
-        self.embed = nn.Linear(in_channel, d_model)
-        
-    def forward(self, x):
-        
-        return self.embed(x) 
-
 
 class DataEmbedding(nn.Module):
     def __init__(self, c_in, d_model, dropout=0.1):
@@ -264,13 +233,12 @@ class DataEmbedding(nn.Module):
 
         self.value_embedding = TokenEmbedding(c_in=c_in, d_model=d_model)
         self.position_embedding = PositionalEmbedding(d_model=d_model)
-        self.temporal_embedding = TemporalEmbedding(in_channel=c_in, d_model=d_model)
 
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x):
         
-        x = self.value_embedding(x) + self.position_embedding(x) + self.temporal_embedding(x)
+        x = self.value_embedding(x) + self.position_embedding(x)
         
         
         return self.dropout(x)
@@ -320,6 +288,8 @@ class EncoderLayer(nn.Module):
         x = x + self.dropout(new_x)
 
         y = x = self.norm1(x)
+
+        ## position-wise feed-forward network
         y = self.dropout(self.activation(self.conv1(y.transpose(-1,1))))
         y = self.dropout(self.conv2(y).transpose(-1,1))
 
@@ -339,10 +309,6 @@ class Encoder(nn.Module):
             for attn_layer, conv_layer in zip(self.attn_layers, self.conv_layers):
                 x, attn = attn_layer(x, attn_mask=attn_mask)
                 x = conv_layer(x)
-                attns.append(attn)
-                #print('xxx', x.shape)
-            if self.training and x.shape[1] > 1:
-                x, attn = self.attn_layers[-1](x, attn_mask=attn_mask)
                 attns.append(attn)
                 
         else:
